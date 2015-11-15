@@ -23,13 +23,13 @@ todo.vm = (function() {
         vm.list = new todo.TodoList();
 
         //a slot to store the name of a new todo before it is created
-        vm.description = m.prop("");
+        vm.description = m.prop('');
 
         //adds a todo to the list, and clears the description field for user convenience
         vm.add = function() {
             if (vm.description()) {
                 vm.list.push(new todo.Todo({description: vm.description()}));
-                vm.description("");
+                vm.description('');
             }
         };
     }
@@ -44,18 +44,18 @@ todo.controller = function() {
 
 //here's the view
 todo.view = function() {
-    return m("html", [
-        m("body", [
-        	  m("div", {id: "container"}),
-            m("input", {onchange: m.withAttr("value", todo.vm.description), value: todo.vm.description()}),
-            m("button", {onclick: todo.vm.add}, "Add"),
-            m("table", [
+    return m('html', [
+        m('body', [
+        	m('div', {id: 'container', style: {width: '300px', height: '300px'} }),
+            m('input', {onchange: m.withAttr('value', todo.vm.description), value: todo.vm.description()}),
+            m('button', {onclick: todo.vm.add}, 'Add'),
+            m('table', [
                 todo.vm.list.map(function(task, index) {
-                    return m("tr", [
-                        m("td", [
-                            m("input[type=checkbox]", {onclick: m.withAttr("checked", task.done), checked: task.done()})
+                    return m('tr', [
+                        m('td', [
+                            m('input[type=checkbox]', {onclick: m.withAttr('checked', task.done), checked: task.done()})
                         ]),
-                        m("td", {style: {textDecoration: task.done() ? "line-through" : "none"}}, task.description()),
+                        m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
                     ])
                 })
             ])
@@ -66,5 +66,5 @@ todo.view = function() {
 //initialize the application
 m.mount(document, {controller: todo.controller, view: todo.view});
 
-var circle = new ProgressBar.Circle("#container");
+var circle = new ProgressBar.Circle('#container');
 circle.set(.5)
