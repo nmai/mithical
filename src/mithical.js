@@ -1,70 +1,29 @@
-//this application only has one component: todo
-var todo = {};
+'use strict'
 
-//for simplicity, we use this component to namespace the model classes
+let ejs = require('ejs')
+let app
+ejs.delimiter = '%'
 
-//the Todo class has two properties
-todo.Todo = function(data) {
-    this.description = m.prop(data.description);
-    this.done = m.prop(false);
-};
+let head = '<head><script src="/mithril.min.js"></script><script src="/progressbar.js"></script></head>'
+let part_header = '<div>Hello, this is the header</div>'
+let part_footer = '<script src="/mithical.js"></script>'
+let part_body = '<style>#container: {width: 300px;height: 150px;}</style>'
+let template_body = '<%- head -%><%- header -%><%- body -%><%- footer -%>'
 
-//the TodoList class is a list of Todo's
-todo.TodoList = Array;
+module.exports = function (express_app) {
+    app = express_app
 
-//the view-model tracks a running list of todos,
-//stores a description for new todos before they are created
-//and takes care of the logic surrounding when adding is permitted
-//and clearing the input after adding a todo to the list
-todo.vm = (function() {
-    var vm = {}
-    vm.init = function() {
-        //a running list of todos
-        vm.list = new todo.TodoList();
-
-        //a slot to store the name of a new todo before it is created
-        vm.description = m.prop("");
-
-        //adds a todo to the list, and clears the description field for user convenience
-        vm.add = function() {
-            if (vm.description()) {
-                vm.list.push(new todo.Todo({description: vm.description()}));
-                vm.description("");
-            }
-        };
-    }
-    return vm
-}())
-
-//the controller defines what part of the model is relevant for the current page
-//in our case, there's only one view-model that handles everything
-todo.controller = function() {
-    todo.vm.init()
+    app.get('/', function (req, res) {
+    res.send(ejs.render(template_body, 
+        {head: head, header: part_header, body: part_body, footer: part_footer}))
+    })
+    app.get('/mithril.min.js', function (req, res) {
+        res.sendFile(__dirname + '/../node_modules/mithril/mithril.min.js')
+    })
+    app.get('/progressbar.js', function (req, res) {
+        res.sendFile(__dirname + '/../lib_dev/progressbar.js')
+    })
+    app.get('/mithical.js', function (req, res) {
+        res.sendFile(__dirname + '/client/script.js')
+    })
 }
-
-//here's the view
-todo.view = function() {
-    return m("html", [
-        m("body", [
-        	  m("div", {id: "container"}),
-            m("input", {onchange: m.withAttr("value", todo.vm.description), value: todo.vm.description()}),
-            m("button", {onclick: todo.vm.add}, "Add"),
-            m("table", [
-                todo.vm.list.map(function(task, index) {
-                    return m("tr", [
-                        m("td", [
-                            m("input[type=checkbox]", {onclick: m.withAttr("checked", task.done), checked: task.done()})
-                        ]),
-                        m("td", {style: {textDecoration: task.done() ? "line-through" : "none"}}, task.description()),
-                    ])
-                })
-            ])
-        ])
-    ]);
-};
-
-//initialize the application
-m.mount(document, {controller: todo.controller, view: todo.view});
-
-var circle = new ProgressBar.Circle("#container");
-circle.set(.5)

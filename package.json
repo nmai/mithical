@@ -28,6 +28,8 @@
   "author": "Nick Mai",
   "license": "MIT",
   "dependencies": {
+    "ejs": "^2.3.3",
+    "express": "^4.13.0",
     "mithril": "^0.2.0"
   },
   "devDependencies": {
