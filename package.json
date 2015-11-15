@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "babel": {
-    "presets": ["es2015"],
+    "presets": [
+      "es2015"
+    ],
     "auxiliaryCommentBefore": "THIS IS OUTPUT FROM THE BABEL TRANSPILER. Edit the ES6 source in /src instead."
   },
   "scripts": {
@@ -31,7 +33,8 @@
   "devDependencies": {
     "babel-cli": "^6.1.1",
     "babel-preset-es2015": "^6.0.15",
+    "eslint": "^1.9.0",
     "jest-cli": "^0.7.0",
-    "standard": "^5.3.1"
+    "nodemon": "^1.8.1"
   }
 }
