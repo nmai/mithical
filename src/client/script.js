@@ -1,3 +1,6 @@
+// This will point to the progress bar element instance
+var progressBar;
+
 //this application only has one component: todo
 var todo = {};
 
@@ -32,6 +35,34 @@ todo.vm = (function() {
                 vm.description('');
             }
         };
+
+        vm.checkOff = function(task) {
+            console.log(task.description())
+            // @TODO: optimize further and (maybe) break this out to a separate helper function
+            //        Or perhaps dispatch a custom event.
+            // Update the progress bar.
+            var complete = 0
+            vm.list.map( (t) => {
+                console.log(t)
+                if (t.done()) {
+                    ++complete
+                }
+            })
+
+            // don't see how it could possibly be zero and trigger a check event,
+            // but it never hurts to play it safe
+            var le = vm.list.length
+            if (le > 0) {
+                progressBar.animate(complete / le)
+            } else if (complete === le) {
+                progressBar.animate(0)
+            } else {
+                progressBar.set(0)
+                throw new Error("Huh, looks like your list broke")
+            }
+
+            return {onclick: m.withAttr('checked', task.done), checked: task.done()}
+        }
     }
     return vm
 }())
@@ -53,7 +84,7 @@ todo.view = function() {
                 todo.vm.list.map(function(task, index) {
                     return m('tr', [
                         m('td', [
-                            m('input[type=checkbox]', {onclick: m.withAttr('checked', task.done), checked: task.done()})
+                            m('input[type=checkbox]', todo.vm.checkOff(task))
                         ]),
                         m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
                     ])
@@ -66,5 +97,16 @@ todo.view = function() {
 //initialize the application
 m.mount(document, {controller: todo.controller, view: todo.view});
 
-var circle = new ProgressBar.Circle('#container');
-circle.set(.5)
+var opts = {
+    strokeWidth: 4.0,
+    trailColor: '#eee',
+    easing: 'easeInOut',
+    duration: 500,
+    from: { color: '#AC3232' },
+    to: { color: '#99E450' },
+    step: function(state, circle, attachment) {
+        circle.path.setAttribute('stroke', state.color);
+    }
+}
+progressBar = new ProgressBar.Line('#container', opts);
+progressBar.set(0)
