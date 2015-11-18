@@ -77,18 +77,20 @@ todo.controller = function() {
 todo.view = function() {
     return m('html', [
         m('body', [
-        	m('div', {id: 'container', style: {width: '300px', height: '300px'} }),
-            m('input', {onchange: m.withAttr('value', todo.vm.description), value: todo.vm.description()}),
-            m('button', {onclick: todo.vm.add}, 'Add'),
-            m('table', [
-                todo.vm.list.map(function(task, index) {
-                    return m('tr', [
-                        m('td', [
-                            m('input[type=checkbox]', todo.vm.checkOff(task))
-                        ]),
-                        m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
-                    ])
-                })
+        	m('div', {id: 'container', style: {maxWidth: '400px', margin: 'auto'}}, [
+                m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
+                m('input', {onchange: m.withAttr('value', todo.vm.description), value: todo.vm.description()}),
+                m('button', {onclick: todo.vm.add}, 'Add'),
+                m('table', [
+                    todo.vm.list.map(function(task, index) {
+                        return m('tr', [
+                            m('td', [
+                                m('input[type=checkbox]', todo.vm.checkOff(task))
+                            ]),
+                            m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
+                        ])
+                    })
+                ])
             ])
         ])
     ]);
@@ -98,15 +100,15 @@ todo.view = function() {
 m.mount(document, {controller: todo.controller, view: todo.view});
 
 var opts = {
-    strokeWidth: 4.0,
+    strokeWidth: 12.0,
     trailColor: '#eee',
     easing: 'easeInOut',
     duration: 500,
     from: { color: '#AC3232' },
     to: { color: '#99E450' },
-    step: function(state, circle, attachment) {
-        circle.path.setAttribute('stroke', state.color);
+    step: function(state, shape, attachment) {
+        shape.path.setAttribute('stroke', state.color);
     }
 }
-progressBar = new ProgressBar.Line('#container', opts);
+progressBar = new ProgressBar.Line('#progress-visual', opts);
 progressBar.set(0)

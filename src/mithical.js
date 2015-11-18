@@ -19,6 +19,8 @@ module.exports = function (express_app) {
     res.send(ejs.render(template_body, 
         {head: head, header: part_header, body: part_body, footer: part_footer}))
     })
+
+    // Lame
     app.get('/mithril.min.js', function (req, res) {
         res.sendFile(__parent + '/node_modules/mithril/mithril.min.js')
     })
