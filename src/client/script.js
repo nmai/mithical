@@ -90,7 +90,8 @@ todo.view = function() {
                             m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
                         ])
                     })
-                ])
+                ]),
+                m('textarea', {id: 'texty', style: {width: '100%', maxWidth: 'inherit', border: 'none'}}) 
             ])
         ])
     ]);

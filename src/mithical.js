@@ -6,18 +6,17 @@ let app
 ejs.delimiter = '%'
 
 // These strings will be replaced with `include('file.ejs')` later
-let head = '<head><script src="/mithril.min.js"></script><script src="/progressbar.js"></script></head>'
-let part_header = '<div>Hello, this is the header</div>'
-let part_footer = '<script src="/mithical.js"></script>'
-let part_body = ''
-let template_body = '<%- head -%><%- header -%><%- body -%><%- footer -%>'
+let head        = ''
+let part_header = ''
+let part_footer = ''
+let part_body   = ''
 
 module.exports = function (express_app) {
     app = express_app
 
     app.get('/', function (req, res) {
     res.send(ejs.render(template_body, 
-        {head: head, header: part_header, body: part_body, footer: part_footer}))
+        {head: head, header: part_header, body: part_body, footer: part_footer, filename: 'test'}))
     })
 
     // Lame
