@@ -14,6 +14,7 @@
     "test-nolint": "node tests/test-main.js",
     "test": "snazzy && node tests/test-main.js",
     "start": "node index.js",
+    "debug": "nodemon index.js",
     "prepublish": "npm run compile"
   },
   "repository": {

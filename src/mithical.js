@@ -1,22 +1,18 @@
 'use strict'
 
 let ejs = require('ejs')
+let fs = require('fs')
 let __parent = parentDir(__dirname)
 let app
 ejs.delimiter = '%'
 
-// These strings will be replaced with `include('file.ejs')` later
-let head        = ''
-let part_header = ''
-let part_footer = ''
-let part_body   = ''
+let template_main = fs.readFileSync('src/client/template/main.ejs', {encoding: 'UTF-8'})
 
 module.exports = function (express_app) {
     app = express_app
 
     app.get('/', function (req, res) {
-    res.send(ejs.render(template_body, 
-        {head: head, header: part_header, body: part_body, footer: part_footer, filename: 'test'}))
+        res.send(ejs.render(template_main, {filename: 'test'} ))
     })
 
     // Lame
