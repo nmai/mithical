@@ -1,41 +1,23 @@
-// This will point to the progress bar element instance
-var progressBar;
+'use strict'
 
-//this application only has one component: todo
-var todo = {};
+/* SHELVED. Might need to fork progressbar.js for a clean solution.
+// a Mithril component wrapping the progressbar.js
+let ProgressBar = {
+    controller: function(args) {
 
-//for simplicity, we use this component to namespace the model classes
+    }
+    view: function(ctrl) {
+        return m()
+    }
+} */
 
-//the Todo class has two properties
-todo.Todo = function(data) {
-    this.description = m.prop(data.description);
-    this.done = m.prop(false);
-};
+// Plan: Capture focus with a hidden textarea.
+// As input events are fired, construct todo items in the view model
+// Data in the view model is bound to the DOM, similar to how the original todo app worked.
 
-//the TodoList class is a list of Todo's
-todo.TodoList = Array;
+let 
 
-//the view-model tracks a running list of todos,
-//stores a description for new todos before they are created
-//and takes care of the logic surrounding when adding is permitted
-//and clearing the input after adding a todo to the list
-todo.vm = (function() {
-    var vm = {}
-    vm.init = function() {
-        //a running list of todos
-        vm.list = new todo.TodoList();
-
-        //a slot to store the name of a new todo before it is created
-        vm.description = m.prop('');
-
-        //adds a todo to the list, and clears the description field for user convenience
-        vm.add = function() {
-            if (vm.description()) {
-                vm.list.push(new todo.Todo({description: vm.description()}));
-                vm.description('');
-            }
-        };
-
+/*
         vm.checkOff = function(task) {
             console.log(task.description())
             // @TODO: optimize further and (maybe) break this out to a separate helper function
@@ -61,24 +43,8 @@ todo.vm = (function() {
                 throw new Error("Huh, looks like your list broke")
             }
 
-            return {onclick: m.withAttr('checked', task.done), checked: task.done()}
-        }
-    }
-    return vm
-}())
+            return {onclick: m.withAttr('checked', task.done), checked: task.done()} */
 
-//the controller defines what part of the model is relevant for the current page
-//in our case, there's only one view-model that handles everything
-todo.controller = function() {
-    todo.vm.init()
-}
-
-function testfunc(e) {
-    if(e.keyIdentifier === 'Enter') {
-        todo.vm.add()
-    }
-    return e
-}
 
 //here's the view
 todo.view = function() {
