@@ -15,6 +15,14 @@ let ProgressBar = {
 // As input events are fired, construct todo items in the view model
 // Data in the view model is bound to the DOM, similar to how the original todo app worked.
 
+// Container for the page. Could be kept within TodoList but having this separate
+// grants me greater flexibility down the road.
+// let Container = {
+//     view: function() {
+//         m('div', {id: 'container', style: {maxWidth: '400px', margin: 'auto'}})
+//     }
+// }
+
 //the Todo class has two properties
 let Todo = function(data) {
     this.description = m.prop(data.description);
@@ -25,21 +33,22 @@ let TodoList = {
     controller: function (args){
 
     },
+    vm: {
+
+    },
     view: function (ctrl){
-        m('div', {id: 'container', style: {maxWidth: '400px', margin: 'auto'}}, [
-            m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
-            m('input', {onchange: m.withAttr('value', todo.vm.description), onkeypress: testfunc, value: todo.vm.description()}),
-            m('button', {onclick: todo.vm.add}, 'Add'),
-            m('table', [
-                todo.vm.list.map(function(task, index) {
-                    return m('tr', [
-                        m('td', [
-                            m('input[type=checkbox]', todo.vm.checkOff(task))
-                        ]),
-                        m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
-                    ])
-                })
-            ])
+        m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
+        m('input', {onchange: m.withAttr('value', vm.description), onkeypress: testfunc, value: todo.vm.description()}),
+        m('button', {onclick: todo.vm.add}, 'Add'),
+        m('table', [
+            todo.vm.list.map(function(task, index) {
+                return m('tr', [
+                    m('td', [
+                        m('input[type=checkbox]', vm.checkOff(task))
+                    ]),
+                    m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
+                ])
+            })
         ])
     }
 }
@@ -74,7 +83,8 @@ let TodoList = {
 
 
 //initialize the application
-m.mount(document.getElementById('section1'), {controller: todo.controller, view: todo.view});
+//m.mount(document, Container)
+m.mount(document.getElementById('container'), TodoList);
 
 var opts = {
     strokeWidth: 12.0,
