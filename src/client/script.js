@@ -23,6 +23,19 @@ let ProgressBar = {
 //     }
 // }
 
+var opts = {
+    strokeWidth: 12.0,
+    trailColor: '#eee',
+    easing: 'easeInOut',
+    duration: 500,
+    from: { color: '#AC3232' },
+    to: { color: '#99E450' },
+    step: function(state, shape, attachment) {
+        shape.path.setAttribute('stroke', state.color);
+    }
+}
+let progressBar
+
 //the Todo class has two properties
 let Todo = function(data) {
     this.description = m.prop(data.description);
@@ -81,19 +94,21 @@ let TodoList = {
         TodoList.vm.init()
     },
     view: function (ctrl){
-        m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
-        m('input', {onchange: m.withAttr('value', this.vm.description), value: this.vm.description()}),
-        m('button', {onclick: this.vm.add}, 'Add'),
-        m('table', [
-            this.vm.list.map(function(task, index) {
-                return m('tr', [
-                    m('td', [
-                        m('input[type=checkbox]', vm.checkOff(task))
-                    ]),
-                    m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
-                ])
-            })
-        ])
+        return [
+            m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
+            m('input', {onchange: m.withAttr('value', TodoList.vm.description), value: TodoList.vm.description()}),
+            m('button', {onclick: TodoList.vm.add}, 'Add'),
+            m('table', [
+                TodoList.vm.list.map(function(task, index) {
+                    return m('tr', [
+                        m('td', [
+                            m('input[type=checkbox]', TodoList.vm.checkOff(task))
+                        ]),
+                        m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
+                    ])
+                })
+            ])
+        ]
     }
 }
 
@@ -128,18 +143,7 @@ let TodoList = {
 
 //initialize the application
 //m.mount(document, Container)
-m.mount(document, TodoList);
+m.mount(document.getElementById('container'), {controller: TodoList.controller, view: TodoList.view});
 
-var opts = {
-    strokeWidth: 12.0,
-    trailColor: '#eee',
-    easing: 'easeInOut',
-    duration: 500,
-    from: { color: '#AC3232' },
-    to: { color: '#99E450' },
-    step: function(state, shape, attachment) {
-        shape.path.setAttribute('stroke', state.color);
-    }
-}
 progressBar = new ProgressBar.Line('#progress-visual', opts);
 progressBar.set(0)
