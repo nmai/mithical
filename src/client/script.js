@@ -74,10 +74,10 @@ todo.controller = function() {
 }
 
 function testfunc(e) {
-    if(e.keyIdentifier === 'Enter') {
+    console.log('firing')
+    if(e.keyCode == 13) {
         todo.vm.add()
     }
-    return e
 }
 
 //here's the view
@@ -86,7 +86,7 @@ todo.view = function() {
         m('body', [
         	m('div', {id: 'container', style: {maxWidth: '400px', margin: 'auto'}}, [
                 m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
-                m('input', {onchange: m.withAttr('value', todo.vm.description), onkeypress: testfunc, value: todo.vm.description()}),
+                m('textarea', {onchange: m.withAttr('value', todo.vm.description), value: todo.vm.description()}),
                 m('button', {onclick: todo.vm.add}, 'Add'),
                 m('table', [
                     todo.vm.list.map(function(task, index) {

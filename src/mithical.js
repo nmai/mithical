@@ -16,7 +16,7 @@ module.exports = function (express_app) {
     })
 
     // Lame
-    app.get('/mithril.min.js', function (req, res) {
+    app.get('/mithril.js', function (req, res) {
         res.sendFile(__parent + '/node_modules/mithril/mithril.min.js')
     })
     app.get('/progressbar.js', function (req, res) {
