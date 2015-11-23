@@ -15,7 +15,34 @@ let ProgressBar = {
 // As input events are fired, construct todo items in the view model
 // Data in the view model is bound to the DOM, similar to how the original todo app worked.
 
-let 
+//the Todo class has two properties
+let Todo = function(data) {
+    this.description = m.prop(data.description);
+    this.done = m.prop(false);
+}
+
+let TodoList = {
+    controller: function (args){
+
+    },
+    view: function (ctrl){
+        m('div', {id: 'container', style: {maxWidth: '400px', margin: 'auto'}}, [
+            m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
+            m('input', {onchange: m.withAttr('value', todo.vm.description), onkeypress: testfunc, value: todo.vm.description()}),
+            m('button', {onclick: todo.vm.add}, 'Add'),
+            m('table', [
+                todo.vm.list.map(function(task, index) {
+                    return m('tr', [
+                        m('td', [
+                            m('input[type=checkbox]', todo.vm.checkOff(task))
+                        ]),
+                        m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
+                    ])
+                })
+            ])
+        ])
+    }
+}
 
 /*
         vm.checkOff = function(task) {
@@ -45,29 +72,6 @@ let
 
             return {onclick: m.withAttr('checked', task.done), checked: task.done()} */
 
-
-//here's the view
-todo.view = function() {
-    return m('html', [
-        m('body', [
-        	m('div', {id: 'container', style: {maxWidth: '400px', margin: 'auto'}}, [
-                m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
-                m('input', {onchange: m.withAttr('value', todo.vm.description), onkeypress: testfunc, value: todo.vm.description()}),
-                m('button', {onclick: todo.vm.add}, 'Add'),
-                m('table', [
-                    todo.vm.list.map(function(task, index) {
-                        return m('tr', [
-                            m('td', [
-                                m('input[type=checkbox]', todo.vm.checkOff(task))
-                            ]),
-                            m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
-                        ])
-                    })
-                ])
-            ])
-        ])
-    ]);
-};
 
 //initialize the application
 m.mount(document.getElementById('section1'), {controller: todo.controller, view: todo.view});
