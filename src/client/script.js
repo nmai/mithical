@@ -12,7 +12,7 @@ let ProgressBar = {
 } */
 
 // Plan: Capture focus with a hidden textarea.
-// As input events are fired, construct todo items in the view model
+// As input events are fired, construct task items in the view model
 // Data in the view model is bound to the DOM, similar to how the original todo app worked.
 
 // Container for the page. Could be kept within TodoList but having this separate
@@ -22,6 +22,19 @@ let ProgressBar = {
 //         m('div', {id: 'container', style: {maxWidth: '400px', margin: 'auto'}})
 //     }
 // }
+
+// holy crap I finally have a proper use case for ES6 generators and I forgot how to do it
+// here's a hack:
+function Keygen () {
+    this._counter = -1
+}
+Keygen.prototype.getNewKey = function() {
+    console.log('getnewkey called')
+    this._counter++
+    return this._counter
+}
+
+let kgen = new Keygen()
 
 var opts = {
     strokeWidth: 12.0,
@@ -36,29 +49,90 @@ var opts = {
 }
 let progressBar
 
-//the Todo class has two properties
-let Todo = function(data) {
+//the Task class just keeps track of data
+let Task = function(data) {
     this.description = m.prop(data.description);
     this.done = m.prop(false);
 }
 
+// let DataModel = function() {
+//     this.list = {}
+// }
+
+// Cell 2.0: serves strictly as a template to structure data stored elsewhere
+let Cell = {
+    controller: function (args) {
+        return {task: args.task}
+    },
+    view: function (ctrl) {
+        console.log(ctrl)
+        return (
+            m('tr', [
+                m('td', {style: {width: '100%'}}, [
+                    m('div', {
+                        style: {
+                            textDecoration: ctrl.task.done() ? 'line-through' : 'none',
+                            outline: 0,
+                            width: '100%',
+                            fontFamily: 'Helvetica Neue',
+                            fontWeight: '300',
+                            fontSize: '20px',
+                        },
+                        contentEditable: true,
+                        onkeypress: (e) => {
+                            // Catch return keystrokes
+                            if (e.keyCode == '13') {
+                                e.preventDefault()
+                                TodoList.vm.add()
+                            }
+                        }
+                    }, ctrl.task.description())
+                ]),
+                m('td', [
+                    m('input[type=checkbox]', TodoList.vm.checkOff(ctrl.task))
+                ])
+            ])
+        )
+    }
+}
+
+//the Cell component creates an internal Task instance
+//renders to contenteditable div. button on the side.
+// let Cell = function () {
+//     this.controller = (args) => {
+        
+//     }
+//     this.view = (ctrl) => {
+//         return [
+
+//         ]
+//     }
+// }
+
+//the TodoList component is structured as a singleton (sort of)
+//I am in the process of stripping this down. This should only keep track of a list
+//of Cell component instances, plus a counter used for updating the progress bar.
 let TodoList = {
     vm: (function() {
         var vm = {}
         vm.init = function() {
             //a running list of todos
-            vm.list = new Array();
+            vm.list = new Array()
 
             //a slot to store the name of a new todo before it is created
-            vm.description = m.prop('');
+            vm.description = m.prop('')
 
             //adds a todo to the list, and clears the description field for user convenience
             vm.add = function() {
-                if (vm.description()) {
-                    vm.list.push(new Todo({description: vm.description()}));
-                    vm.description('');
-                }
-            };
+                //if (vm.description()) {
+                    let t = new Task({description: vm.description()})
+                    vm.list.push(t)
+                    vm.description('')
+                //}
+            }
+
+            //add a single item to get started
+            vm.add()
 
             vm.checkOff = function(task) {
                 console.log(task.description())
@@ -75,14 +149,18 @@ let TodoList = {
 
                 // don't see how it could possibly be zero and trigger a check event,
                 // but it never hurts to play it safe
-                var le = vm.list.length
-                if (le > 0) {
-                    progressBar.animate(complete / le)
-                } else if (complete === le) {
-                    progressBar.animate(0)
-                } else {
-                    progressBar.set(0)
-                    throw new Error("Huh, looks like your list broke")
+                // @TODO: Currently this executes only when progressbar is on DOM
+                // Later I need to find a better solution. Like making a component.
+                if(progressBar) {
+                    var le = vm.list.length
+                    if (le > 0) {
+                        progressBar.animate(complete / le)
+                    } else if (complete === le) {
+                        progressBar.animate(0)
+                    } else {
+                        progressBar.set(0)
+                        throw new Error("Huh, looks like your list broke")
+                    }
                 }
 
                 return {onclick: m.withAttr('checked', task.done), checked: task.done()}
@@ -96,18 +174,13 @@ let TodoList = {
     view: function (ctrl){
         return [
             m('div', {id: 'progress-visual', style: {maxWidth: '400px', marginBottom: '12px'} }),
-            m('input', {onchange: m.withAttr('value', TodoList.vm.description), value: TodoList.vm.description()}),
-            m('button', {onclick: TodoList.vm.add}, 'Add'),
-            m('table', [
+            //m('input', {onchange: m.withAttr('value', TodoList.vm.description), value: TodoList.vm.description()}),
+            //m('button', {onclick: TodoList.vm.add}, 'Add'),
+            m('table',
                 TodoList.vm.list.map(function(task, index) {
-                    return m('tr', [
-                        m('td', [
-                            m('input[type=checkbox]', TodoList.vm.checkOff(task))
-                        ]),
-                        m('td', {style: {textDecoration: task.done() ? 'line-through' : 'none'}}, task.description()),
-                    ])
+                    return m.component(Cell, {task: task, key: task})
                 })
-            ])
+            )
         ]
     }
 }
