@@ -48,12 +48,8 @@ let progressBar
 let Task = function(data) {
     this.description = m.prop(data.description)
     this.done = m.prop(false)
-    this.selected = m.prop(false)
+    this.valid = m.prop(false)
 }
-
-// let DataModel = function() {
-//     this.list = {}
-// }
 
 // Cell 2.0: serves strictly as a template to structure data stored elsewhere
 let Cell = {
@@ -75,18 +71,46 @@ let Cell = {
                             fontSize: '20px',
                         },
                         contentEditable: true,
-                        class: ctrl.task.selected() ? "active" : "",
                         onkeypress: (e) => {
                             // Catch return keystrokes
                             if (e.keyCode == '13') {
                                 e.preventDefault()
-                                TodoList.vm.add()
+                                TodoList.vm.add(true)
+                            }
+                        },
+                        innerText: ctrl.task.description(),
+                        oninput: (e) => {
+                            this.updateDescription()
+                            console.log(ctrl.task.description())
+                            if (ctrl.task.description().length > 0) {
+                                ctrl.task.valid(true)
+                            } else {
+                                ctrl.task.valid(false)
+                            }
+                            console.log(ctrl.task.description())
+                        },
+                        config: (el) => {
+                            // *sigh* this is so bad
+                            // @todo: figure out how to move this function declaration out while keeping el in scope.
+                            //   Either that or figure out how to get innerText directly.
+                            //if(!this.updateDescription) {
+                                this.updateDescription = function () {
+                                    ctrl.task.description(el.innerText)
+                                }
+                            //}
+                            // Check in with the view model to see if it's OK to grab the focus
+                            if (TodoList.vm.selected === ctrl.task) {
+                                el.focus()
                             }
                         }
-                    }, ctrl.task.description())
+                    })
                 ]),
                 m('td', [
-                    m('input[type=checkbox]', TodoList.vm.checkOff(ctrl.task))
+                    m('input[type=checkbox]', {
+                        style: {
+                            visibility: ctrl.task.valid() ? 'visible' : 'hidden'
+                        }
+                    }, TodoList.vm.checkOff(ctrl.task))
                 ])
             ])
         )
@@ -118,27 +142,30 @@ let TodoList = {
 
             //a slot to store the name of a new todo before it is created
             vm.description = m.prop('')
+            vm.selected
 
             //adds a todo to the list, and clears the description field for user convenience
-            vm.add = function() {
+            vm.add = function(autoselect) {
                 //if (vm.description()) {
-                    let t = new Task({description: vm.description()})
-                    vm.list.push(t)
-                    vm.description('')
+                let t = new Task({description: vm.description()})
+                vm.list.push(t)
+                vm.description('')
+                if (autoselect) {
+                    vm.selected = t
+                }
+                return t
                 //}
             }
 
-            //add a single item to get started
-            vm.add()
+            //add a single item to get started. set as the currently selected element.
+            vm.add(true)
 
             vm.checkOff = function(task) {
-                console.log(task.description())
                 // @TODO: optimize further and (maybe) break this out to a separate helper function
                 //        Or perhaps dispatch a custom event.
                 // Update the progress bar.
                 var complete = 0
                 vm.list.map( (t) => {
-                    console.log(t)
                     if (t.done()) {
                         ++complete
                     }
