@@ -2,7 +2,9 @@
 
 let ejs = require('ejs')
 let fs = require('fs')
-let __parent = parentDir(__dirname)
+//let __parent = parentDir(__dirname)
+let __root = require('app-root-path').resolve('');
+
 let app
 ejs.delimiter = '%'
 
@@ -17,16 +19,17 @@ module.exports = function (express_app) {
 
     // Lame
     app.get('/mithril.min.js', function (req, res) {
-        res.sendFile(__parent + '/node_modules/mithril/mithril.min.js')
+        res.sendFile(__root + '/node_modules/mithril/mithril.min.js')
     })
     app.get('/progressbar.js', function (req, res) {
-        res.sendFile(__parent + '/lib_dev/progressbar.js')
+        res.sendFile(__root + '/lib_dev/progressbar.js')
     })
     app.get('/mithical.js', function (req, res) {
-        res.sendFile(__parent + '/src/client/script.js')
+        res.sendFile(__root + '/src/client/script.js')
     })
 }
 
+// @todo: for cleanup. unnecessary now.
 // I don't know why the hell this is necessary but I have no internet right now.
 // Simply using `__dirName + '/../asdf'` fails. Console output says FORBIDDEN
 function parentDir (dirname) {

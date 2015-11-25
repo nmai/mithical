@@ -29,6 +29,7 @@
   "author": "Nick Mai",
   "license": "MIT",
   "dependencies": {
+    "app-root-path": "^1.0.0",
     "ejs": "^2.3.4",
     "express": "^4.13.0",
     "mithril": "^0.2.0"

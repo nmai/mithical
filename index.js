@@ -1,14 +1,14 @@
 console.log(process.version)
-
+global.reqlib = require('app-root-path').require;
 var semver = require('semver')
 var express = require('express')
 var app = express()
 
 // Perhaps there is a better way to confirm ES6 support.
 if (process.version && semver.gt(process.version, '4.0.0')) {
-  module.exports = require('./src/mithical.js')(app)
+  module.exports = reqlib('./src/mithical.js')(app)
 } else {
-  module.exports = require('./build/mithical.js')
+  module.exports = reqlib('./build/mithical.js')
 }
 
 var args = process.argv.slice(2)
