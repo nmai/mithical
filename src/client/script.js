@@ -23,18 +23,13 @@ let ProgressBar = {
 //     }
 // }
 
-// holy crap I finally have a proper use case for ES6 generators and I forgot how to do it
-// here's a hack:
-function Keygen () {
-    this._counter = -1
+// damn, I thought I finally had a use case for generators but nah
+// I'll leave this in for now.
+function* Keygen(){
+  var index = 0;
+  yield index++;
 }
-Keygen.prototype.getNewKey = function() {
-    console.log('getnewkey called')
-    this._counter++
-    return this._counter
-}
-
-let kgen = new Keygen()
+let kgen = Keygen()
 
 var opts = {
     strokeWidth: 12.0,
