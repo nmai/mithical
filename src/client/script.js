@@ -48,6 +48,7 @@ let progressBar
 let Task = function(data) {
     this.description = m.prop(data.description)
     this.done = m.prop(false)
+    this.selected = m.prop(false)
 }
 
 // let DataModel = function() {
@@ -74,6 +75,7 @@ let Cell = {
                             fontSize: '20px',
                         },
                         contentEditable: true,
+                        class: ctrl.task.selected() ? "active" : "",
                         onkeypress: (e) => {
                             // Catch return keystrokes
                             if (e.keyCode == '13') {
@@ -215,3 +217,26 @@ m.mount(document.getElementById('container'), {controller: TodoList.controller, 
 
 progressBar = new ProgressBar.Line('#progress-visual', opts)
 progressBar.set(0)
+
+
+/* notes: getting focus
+
+function isFocused() {
+  if (document.activeElement.id == "journal-content") {
+    alert("Focused!");
+  } else {
+    alert("Not focused :(");
+  }
+}
+
+#journal-content {
+  background-color: #eee;
+}
+#not-journal-content {
+  background-color: #ccc;
+}
+
+<div id="journal-content" contenteditable="true" onclick="isFocused()">Journal Content</div>
+<div id="not-journal-content" contenteditable="true" onclick="isFocused()">Not Journal Content</div>
+
+*/
