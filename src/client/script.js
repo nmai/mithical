@@ -80,8 +80,7 @@ let Cell = {
                         },
                         innerText: ctrl.task.description(),
                         oninput: (e) => {
-                            this.updateDescription()
-                            console.log(ctrl.task.description())
+                            ctrl.task.description(e.target.innerText)
                             if (ctrl.task.description().length > 0) {
                                 ctrl.task.valid(true)
                             } else {
@@ -109,8 +108,11 @@ let Cell = {
                     m('input[type=checkbox]', {
                         style: {
                             visibility: ctrl.task.valid() ? 'visible' : 'hidden'
-                        }
-                    }, TodoList.vm.checkOff(ctrl.task))
+                        },
+                        //Here we need to add onclick listener to toggle states
+                        onclick: (e) => {TodoList.vm.checkOff(ctrl.task)},
+                        checked: ctrl.task.done()
+                    })
                 ])
             ])
         )
@@ -161,6 +163,7 @@ let TodoList = {
             vm.add(true)
 
             vm.checkOff = function(task) {
+                task.done(!task.done())
                 // @TODO: optimize further and (maybe) break this out to a separate helper function
                 //        Or perhaps dispatch a custom event.
                 // Update the progress bar.
@@ -186,8 +189,6 @@ let TodoList = {
                         throw new Error("Huh, looks like your list broke")
                     }
                 }
-
-                return {onclick: m.withAttr('checked', task.done), checked: task.done()}
             }
         }
         return vm
