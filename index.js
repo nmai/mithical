@@ -6,9 +6,9 @@ var app = express()
 
 // Perhaps there is a better way to confirm ES6 support.
 if (process.version && semver.gt(process.version, '4.0.0')) {
-  module.exports = reqlib('./src/mithical.js')(app)
+  module.exports = reqlib('./src/server.js')(app)
 } else {
-  module.exports = reqlib('./build/mithical.js')
+  module.exports = reqlib('./build/server.js')(app)
 }
 
 var args = process.argv.slice(2)

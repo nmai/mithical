@@ -31,8 +31,7 @@
   "dependencies": {
     "app-root-path": "^1.0.0",
     "ejs": "^2.3.4",
-    "express": "^4.13.0",
-    "mithril": "git+https://github.com/lhorie/mithril.js.git"
+    "express": "^4.13.0"
   },
   "devDependencies": {
     "babel-cli": "^6.1.1",
