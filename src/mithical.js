@@ -18,8 +18,8 @@ module.exports = function (express_app) {
     })
 
     // Lame
-    app.get('/mithril.min.js', function (req, res) {
-        res.sendFile(__root + '/node_modules/mithril/mithril.min.js')
+    app.get('/mithril.js', function (req, res) {
+        res.sendFile(__root + '/node_modules/mithril/mithril.js')
     })
     app.get('/progressbar.js', function (req, res) {
         res.sendFile(__root + '/lib_dev/progressbar.js')
