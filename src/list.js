@@ -1,9 +1,5 @@
 'use strict'
 
-let Bar = require('./bar.js')
-let Task = require('./task.js')
-let Cell = require('./cell.js')
-
 //the List component is structured as a singleton (sort of)
 //I am in the process of stripping this down. This should only keep track of a list
 //of Cell component instances, plus a counter used for updating the progress bar.

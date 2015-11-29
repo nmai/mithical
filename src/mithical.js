@@ -22,27 +22,8 @@ let ProgressBar = {
 //         m('div', {id: 'container', style: {maxWidth: '400px', margin: 'auto'}})
 //     }
 // }
-
-var opts = {
-  strokeWidth: 12.0,
-  trailColor: '#eee',
-  easing: 'easeInOut',
-  duration: 500,
-  from: { color: '#AC3232' },
-  to: { color: '#99E450' },
-  step: function(state, shape, attachment) {
-    shape.path.setAttribute('stroke', state.color)
-  }
-}
-let progressBar
-
-//the Task class just keeps track of data
-let Task = function(data) {
-  this.description = m.prop(data.description)
-  this.done = m.prop(false)
-  this.valid = m.prop(false)
-}
-
+let m = require('../lib/mithril')
+let List = require('./component/list')
 
 //initialize the application
 //m.mount(document, Container)

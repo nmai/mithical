@@ -16,6 +16,7 @@ app.get('/', function (req, res) {
 
 app.use(express.static(__root + '/lib'))
 app.use(express.static(__root + '/src'))
+app.use(express.static(__root + '/dist'))
 
 app.listen(8080)
 

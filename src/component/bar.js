@@ -1,5 +1,7 @@
 'use strict'
 
+let progressBar = require('../../lib/progressbar')
+
 let options = {
   strokeWidth: 12.0,
   trailColor: '#eee',

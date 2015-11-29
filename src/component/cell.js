@@ -68,3 +68,5 @@ let Cell = {
     )
   }
 }
+
+module.exports = Cell
