@@ -24,11 +24,6 @@ var http = app.listen(8080)
 // For auto-reload on server restart. Development feature only.
 var io = require('socket.io').listen(http)
 
-process.on('exit', function  () {
-  console.log('Closing all socket connections')
-  io.close()
-})
-
 // @todo: figure out a better way to confirm ES6 support.
 /*
 var semver = require('semver')
