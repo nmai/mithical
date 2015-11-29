@@ -31,7 +31,7 @@ var opts = {
   from: { color: '#AC3232' },
   to: { color: '#99E450' },
   step: function(state, shape, attachment) {
-      shape.path.setAttribute('stroke', state.color)
+    shape.path.setAttribute('stroke', state.color)
   }
 }
 let progressBar
@@ -42,34 +42,6 @@ let Task = function(data) {
   this.done = m.prop(false)
   this.valid = m.prop(false)
 }
-
-/*
-        vm.checkOff = function(task) {
-            console.log(task.description())
-            // @TODO: optimize further and (maybe) break this out to a separate helper function
-            //        Or perhaps dispatch a custom event.
-            // Update the progress bar.
-            var complete = 0
-            vm.list.map( (t) => {
-                console.log(t)
-                if (t.done()) {
-                    ++complete
-                }
-            })
-
-            // don't see how it could possibly be zero and trigger a check event,
-            // but it never hurts to play it safe
-            var le = vm.list.length
-            if (le > 0) {
-                progressBar.animate(complete / le)
-            } else if (complete === le) {
-                progressBar.animate(0)
-            } else {
-                progressBar.set(0)
-                throw new Error("Huh, looks like your list broke")
-            }
-
-            return {onclick: m.withAttr('checked', task.done), checked: task.done()} */
 
 
 //initialize the application

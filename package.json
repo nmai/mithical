@@ -14,7 +14,7 @@
     "test-nolint": "node tests/test-main.js",
     "test": "snazzy && node tests/test-main.js",
     "start": "node index.js",
-    "pack": "browserify -e src/mithical --o dist/bundle.js",
+    "pack": "browserify --fast --u=lib/mithril.js --u=lib/progressbar.js -e=src/mithical --o=dist/bundle.js",
     "auto": "npm run pack && node index.js",
     "debug": "nodemon -i dist/bundle.js -x 'npm run auto'",
     "prepublish": "npm run compile"
