@@ -1,6 +1,6 @@
 {
   "name": "mithical",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "",
   "main": "index.js",
   "babel": {
@@ -14,7 +14,9 @@
     "test-nolint": "node tests/test-main.js",
     "test": "snazzy && node tests/test-main.js",
     "start": "node index.js",
-    "debug": "nodemon index.js",
+    "pack": "browserify -e src/mithical --o dist/bundle.js",
+    "auto": "npm run pack && node index.js",
+    "debug": "nodemon -i dist/bundle.js -x 'npm run auto'",
     "prepublish": "npm run compile"
   },
   "repository": {
@@ -37,6 +39,7 @@
   "devDependencies": {
     "babel-cli": "^6.1.1",
     "babel-preset-es2015": "^6.0.15",
+    "browserify": "^12.0.1",
     "eslint": "^1.9.0",
     "jest-cli": "^0.7.0",
     "nodemon": "^1.8.1"

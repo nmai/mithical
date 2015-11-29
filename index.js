@@ -1,13 +1,11 @@
 'use strict'
 
-console.log(process.version)
 global.reqlib = require('app-root-path').require
 var express = require('express')
 var app = express()
 var ejs = require('ejs')
 var fs = require('fs')
 var __root = require('app-root-path').resolve('')
-
 ejs.delimiter = '%'
 
 var template_main = fs.readFileSync('src/template/main.ejs', {encoding: 'UTF-8'})
@@ -19,10 +17,15 @@ app.get('/', function (req, res) {
 app.use(express.static(__root + '/lib'))
 app.use(express.static(__root + '/src'))
 
-var http = app.listen(8080)
+app.listen(8080)
+
+console.log('Server started OK')
+
+
+/*~~~~~~~ detritus ~~~~~~~*/
 
 // For auto-reload on server restart. Development feature only.
-var io = require('socket.io').listen(http)
+//var io = require('socket.io').listen(http)
 
 // @todo: figure out a better way to confirm ES6 support.
 /*
