@@ -1,5 +1,6 @@
 'use strict'
 
+let m = require('../../lib/mithril')
 let Bar = require('./bar.js')
 let Task = require('./task.js')
 let Cell = require('./cell.js')
@@ -18,14 +19,43 @@ let List = {
       vm.description = m.prop('')
       vm.selected
 
+      vm.recalculate = () => {
+        // @TODO: optimize further and (maybe) break this out to a separate helper function
+        //        Or perhaps dispatch a custom event.
+        // Update the progress bar.
+        console.log('recalculating')
+        let complete = 0
+        let total = 0
+        vm.list.map( (t) => {
+          if (t.done()) {
+            ++complete
+          }
+          if (t.valid()) {
+            ++total
+          }
+        })
+        console.log(Bar)
+        if (total > 0) {
+          Bar.update(complete / total)
+        } else if (complete === total) {
+          Bar.update(0)
+        } else {
+          throw new Error()
+        }
+      }
+
       //adds a todo to the list, and clears the description field for user convenience
-      vm.add = function(autoselect) {
+      vm.add = (autoselect) => {
         //if (vm.description()) {
-        let t = new Task({description: vm.description()})
+        let t = new Task({description: vm.description(), vm: List.vm})
         vm.list.push(t)
         vm.description('')
         if (autoselect) {
+          // Unnecessary right now. May need this later.
           vm.selected = t
+
+
+          t.needFocus(true)
         }
         return t
         //}
@@ -36,35 +66,16 @@ let List = {
 
       vm.checkOff = function(task) {
         task.done(!task.done())
-        // @TODO: optimize further and (maybe) break this out to a separate helper function
-        //        Or perhaps dispatch a custom event.
-        // Update the progress bar.
-        var complete = 0
-        vm.list.map( (t) => {
-          if (t.done()) {
-            ++complete
-          }
-        })
-        console.log(Bar.controller.progressBar)
-        if (Bar.controller.progressBar) {
-          var le = vm.list.length
-          if (le > 0) {
-            Bar.controller.animate(complete / le)
-          } else if (complete === le) {
-            Bar.controller.animate(0)
-          } else {
-            Bar.controller.progressBar.set(0)
-            throw new Error("Huh, looks like your list broke")
-          }
-        }
+        vm.recalculate()
+        console.log('checkoff')
       }
     }
     return vm
   }()),
-  controller: function (args){
+  controller: function (){
     List.vm.init()
   },
-  view: function (ctrl){
+  view: function (){
     return [
       m.component(Bar),
       //m('input', {onchange: m.withAttr('value', List.vm.description), value: List.vm.description()}),

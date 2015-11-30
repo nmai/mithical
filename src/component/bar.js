@@ -1,6 +1,7 @@
 'use strict'
 
-let progressBar = require('../../lib/progressbar')
+let m = require('../../lib/mithril')
+let ProgressBar = require('progressbar.js')
 
 let options = {
   strokeWidth: 12.0,
@@ -9,21 +10,24 @@ let options = {
   duration: 500,
   from: { color: '#AC3232' },
   to: { color: '#99E450' },
-  step: function(state, shape, attachment) {
+  step: function(state, shape) {
     shape.path.setAttribute('stroke', state.color)
   }
 }
 
 let Bar = {
-  controller: function (args) {
-    this.progressBar
-
-    this.setProgressBar = (pbar) => {
-      this.progressBar = pbar
-    }
-
-    this.animate = (val) => {
-      this.progressBar.animate(val)
+  controller: function () {
+    console.log('controller called')
+    Bar.update = function (val){
+      if(Bar.progressbar) {
+        if (val >= 0.0 && val <= 1.0) {
+          this.progressbar.animate(val)
+        } else {
+          throw new Error('Value not valid: ' + val)
+        }
+      } else {
+        throw new Error('ProgressBar child instance not defined')
+      }
     }
   },
   view: function (ctrl) {
@@ -35,10 +39,13 @@ let Bar = {
       config: function (el, isInit, context) {
         context.retain = true
         if (!isInit) {
-          ctrl.setProgressBar(new ProgressBar.Line(el, options))
-          ctrl.progressBar.set(0)
+          console.log('initializing')
+          Bar.progressbar = new ProgressBar.Line(el, options)
+          Bar.progressbar.set(0)
         }
       }
     })
   }
 }
+
+module.exports = Bar
