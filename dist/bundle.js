@@ -4537,18 +4537,14 @@ let List = require('./list')
 // Cell 2.0: serves strictly as a template to structure data stored elsewhere
 let Cell = {
   controller: function (args) {
-    // Yeah, there has to be a better way.
-    // This is messy but still cleaner than what I was doing before.
-    this.requestFocus = function () {
-      args.task.needFocus(true)
-    }
+    // propogate higher-order input events to the list model
+
 
     return {
       task: args.task
     }
   },
   view: function (ctrl) {
-    console.log(ctrl)
     return (
       m('tr', [
         m('td', {style: {width: '100%'}}, [
@@ -4563,6 +4559,7 @@ let Cell = {
               whiteSpace: 'pre'
             },
             contentEditable: true,
+            innerText: ctrl.task.description(),
             onkeypress: (e) => {
               // Catch return keystrokes
               if (e.keyCode == '13') {
@@ -4570,7 +4567,17 @@ let Cell = {
                 ctrl.task.vm.add(true)
               }
             },
-            innerText: ctrl.task.description(),
+            onkeydown: (e) => {
+              if (e.keyCode == '40') {
+                // DOWN key pressed
+                e.preventDefault()
+                ctrl.task.vm.shiftDown()
+              } else if (e.keyCode == '38') {
+                // UP key pressed
+                e.preventDefault()
+                ctrl.task.vm.shiftUp()
+              }
+            },
             oninput: (e) => {
               ctrl.task.description(e.target.innerText)
               if (ctrl.task.description().length > 0) {
@@ -4579,12 +4586,10 @@ let Cell = {
                   ctrl.task.vm.recalculate()
                 }
               } else {
-                console.log('hit 0')
                 ctrl.task.valid(false)
                 ctrl.task.done(false)
                 ctrl.task.vm.recalculate()
               }
-              console.log(ctrl.task.description())
             },
             config: (el) => {
               // If a request was queued, grab the focus and reset.
@@ -4601,7 +4606,7 @@ let Cell = {
               visibility: ctrl.task.valid() ? 'visible' : 'hidden'
             },
             //Here we need to add onclick listener to toggle states
-            onclick: (e) => {ctrl.task.vm.checkOff(ctrl.task)},
+            onclick: () => {ctrl.task.vm.checkOff(ctrl.task)},
             checked: ctrl.task.done()
           })
         ])
@@ -4620,88 +4625,122 @@ let Bar = require('./bar.js')
 let Task = require('./task.js')
 let Cell = require('./cell.js')
 
-//the List component is structured as a singleton (sort of)
-//I am in the process of stripping this down. This should only keep track of a list
-//of Cell component instances, plus a counter used for updating the progress bar.
-let List = {
-  vm: (function() {
-    var vm = {}
-    vm.init = function() {
-      //a running list of todos
-      vm.list = new Array()
+// the List component is structured as a singleton (sort of)
+// I am in the process of stripping this down. This should only keep track of a list
+// of Cell component instances, plus a counter used for updating the progress bar.
+let List = {}
 
-      //a slot to store the name of a new todo before it is created
-      vm.description = m.prop('')
-      vm.selected
+List.vm = (function() {
+  var vm = {}
+  vm.init = function() {
+    //a running list of todos
+    vm.list = new Array()
 
-      vm.recalculate = () => {
-        // @TODO: optimize further and (maybe) break this out to a separate helper function
-        //        Or perhaps dispatch a custom event.
-        // Update the progress bar.
-        console.log('recalculating')
-        let complete = 0
-        let total = 0
-        vm.list.map( (t) => {
-          if (t.done()) {
-            ++complete
+    // a slot to store the name of a new todo before it is created
+    vm.description = m.prop('')
+
+    // index of currently selected item
+    let _selected = 0
+    vm.selectTask = (t) => {
+      if (t) {
+        let memberIndex = -1
+        for (let i = 0; i < vm.list.length; i++) {
+          let item = vm.list[i]
+          if (item === t) {
+            memberIndex = i
+            break
           }
-          if (t.valid()) {
-            ++total
-          }
-        })
-        console.log(Bar)
-        if (total > 0) {
-          Bar.update(complete / total)
-        } else if (complete === total) {
-          Bar.update(0)
-        } else {
-          throw new Error()
         }
-      }
-
-      //adds a todo to the list, and clears the description field for user convenience
-      vm.add = (autoselect) => {
-        //if (vm.description()) {
-        let t = new Task({description: vm.description(), vm: List.vm})
-        vm.list.push(t)
-        vm.description('')
-        if (autoselect) {
-          // Unnecessary right now. May need this later.
-          vm.selected = t
-
-
+        if (memberIndex >= 0) {
+          _selected = memberIndex
           t.needFocus(true)
+        } else {
+          throw new Error('Could not find referenced task in list')
         }
-        return t
-        //}
-      }
-
-      //add a single item to get started. set as the currently selected element.
-      vm.add(true)
-
-      vm.checkOff = function(task) {
-        task.done(!task.done())
-        vm.recalculate()
-        console.log('checkoff')
+      } else {
+        throw new Error('Cannot select undefined task')
       }
     }
-    return vm
-  }()),
-  controller: function (){
-    List.vm.init()
-  },
-  view: function (){
-    return [
-      m.component(Bar),
-      //m('input', {onchange: m.withAttr('value', List.vm.description), value: List.vm.description()}),
-      //m('button', {onclick: List.vm.add}, 'Add'),
-      m('table',
-        List.vm.list.map(function(task, index) {
-          return m.component(Cell, {task: task, key: task})
-        })
-      )
-    ]
+    vm.selectIndex = (i) => {
+      let t = vm.list[i]
+      if (t) {
+        vm.selectTask(t)
+        return true
+      } else {
+        // If no such item exists, don't throw an error. This is by design.
+        // @todo: check i < 0 and i > length instead
+        return false
+      }
+    }
+    vm.shiftUp = (cursorPlacement) => {
+      vm.selectIndex(_selected - 1)
+    }
+    vm.shiftDown = (cursorPlacement) => {
+      vm.selectIndex(_selected + 1)
+    }
+
+    vm.recalculate = () => {
+      // @TODO: optimize further and (maybe) break this out to a separate helper function
+      //        Or perhaps dispatch a custom event.
+      // Update the progress bar.
+      console.log('Recalculating progress...')
+      let complete = 0
+      let total = 0
+      vm.list.map( (t) => {
+        if (t.done()) {
+          ++complete
+        }
+        if (t.valid()) {
+          ++total
+        }
+      })
+      console.log(Bar)
+      if (total > 0) {
+        Bar.update(complete / total)
+      } else if (complete === total) {
+        Bar.update(0)
+      } else {
+        throw new Error()
+      }
+    }
+
+    //adds a todo to the list, and clears the description field for user convenience
+    vm.add = (autoselect) => {
+      //if (vm.description()) {
+      let t = new Task({description: vm.description(), vm: List.vm})
+      vm.list.push(t)
+      vm.description('')
+      if (autoselect) {
+        vm.selectTask(t)
+      }
+      return t
+      //}
+    }
+
+    //add a single item to get started. set as the currently selected element.
+    vm.add(true)
+
+    vm.checkOff = function(task) {
+      task.done(!task.done())
+      vm.recalculate()
+    }
   }
+  return vm
+}())
+
+List.controller = function (){
+  List.vm.init()
+}
+
+List.view = function (){
+  return [
+    m.component(Bar),
+    m('table',
+      List.vm.list.map(function(task) {
+        return m.component(Cell, {task: task, key: task})
+      })
+    )
+  ]
 }
 
 module.exports = List
@@ -4751,5 +4790,21 @@ let List = require('./component/list')
 //initialize the application
 //m.mount(document, Container)
 m.mount(document.getElementById('container'), {controller: List.controller, view: List.view})
+
+// @todo: persistent cursor position (when shifting up and down)
+// high priority because very simple and would help UX a lot
+
+// @todo: the ability to save.
+// add a recent todolist browser component
+// add a "new" and "delete" button
+// localstorage or database.
+// loads and displays most recent list by default.
+// most of this shit will be managed OUTSIDE of the List class. List will just provide JSON representations.
+
+// @todo: more polishing. lower priority.
+// replace current tiny checkboxes with something nicer
+// perhaps move checkboxes to outside the list, but let them collapse into the list if necessary
+// add the animated caret thingy
+// add the ability to check items off with a keystroke
 
 },{"../lib/mithril":"/Users/nick/Desktop/mithical/lib/mithril.js","./component/list":"/Users/nick/Desktop/mithical/src/component/list.js"}]},{},["/Users/nick/Desktop/mithical/src/mithical"]);

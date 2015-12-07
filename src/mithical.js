@@ -28,3 +28,19 @@ let List = require('./component/list')
 //initialize the application
 //m.mount(document, Container)
 m.mount(document.getElementById('container'), {controller: List.controller, view: List.view})
+
+// @todo: persistent cursor position (when shifting up and down)
+// high priority because very simple and would help UX a lot
+
+// @todo: the ability to save.
+// add a recent todolist browser component
+// add a "new" and "delete" button
+// localstorage or database.
+// loads and displays most recent list by default.
+// most of this shit will be managed OUTSIDE of the List class. List will just provide JSON representations.
+
+// @todo: more polishing. lower priority.
+// replace current tiny checkboxes with something nicer
+// perhaps move checkboxes to outside the list, but let them collapse into the list if necessary
+// add the animated caret thingy
+// add the ability to check items off with a keystroke

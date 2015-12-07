@@ -6,18 +6,14 @@ let List = require('./list')
 // Cell 2.0: serves strictly as a template to structure data stored elsewhere
 let Cell = {
   controller: function (args) {
-    // Yeah, there has to be a better way.
-    // This is messy but still cleaner than what I was doing before.
-    this.requestFocus = function () {
-      args.task.needFocus(true)
-    }
+    // propogate higher-order input events to the list model
+
 
     return {
       task: args.task
     }
   },
   view: function (ctrl) {
-    console.log(ctrl)
     return (
       m('tr', [
         m('td', {style: {width: '100%'}}, [
@@ -32,6 +28,7 @@ let Cell = {
               whiteSpace: 'pre'
             },
             contentEditable: true,
+            innerText: ctrl.task.description(),
             onkeypress: (e) => {
               // Catch return keystrokes
               if (e.keyCode == '13') {
@@ -39,7 +36,17 @@ let Cell = {
                 ctrl.task.vm.add(true)
               }
             },
-            innerText: ctrl.task.description(),
+            onkeydown: (e) => {
+              if (e.keyCode == '40') {
+                // DOWN key pressed
+                e.preventDefault()
+                ctrl.task.vm.shiftDown()
+              } else if (e.keyCode == '38') {
+                // UP key pressed
+                e.preventDefault()
+                ctrl.task.vm.shiftUp()
+              }
+            },
             oninput: (e) => {
               ctrl.task.description(e.target.innerText)
               if (ctrl.task.description().length > 0) {
@@ -48,12 +55,10 @@ let Cell = {
                   ctrl.task.vm.recalculate()
                 }
               } else {
-                console.log('hit 0')
                 ctrl.task.valid(false)
                 ctrl.task.done(false)
                 ctrl.task.vm.recalculate()
               }
-              console.log(ctrl.task.description())
             },
             config: (el) => {
               // If a request was queued, grab the focus and reset.
@@ -70,7 +75,7 @@ let Cell = {
               visibility: ctrl.task.valid() ? 'visible' : 'hidden'
             },
             //Here we need to add onclick listener to toggle states
-            onclick: (e) => {ctrl.task.vm.checkOff(ctrl.task)},
+            onclick: () => {ctrl.task.vm.checkOff(ctrl.task)},
             checked: ctrl.task.done()
           })
         ])
