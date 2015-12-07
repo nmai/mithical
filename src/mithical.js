@@ -44,3 +44,6 @@ m.mount(document.getElementById('container'), {controller: List.controller, view
 // perhaps move checkboxes to outside the list, but let them collapse into the list if necessary
 // add the animated caret thingy
 // add the ability to check items off with a keystroke
+
+// thought: perhaps I really do need to switch to a hidden textarea.
+// I just realized selection and copy/paste is impossible with my current implementation.
