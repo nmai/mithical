@@ -17,7 +17,7 @@
     "pack": "browserify --fast=true -e=src/mithical --o=dist/bundle.js",
     "smartpack": "browserifyinc --cachefile=.browserify-cache src/mithical -v -o=dist/bundle.js",
     "autostart": "npm run smartpack && node index.js",
-    "debug": "nodemon -i dist/bundle.js -i .browserify-cache -x 'npm run autostart'",
+    "debug": "nodemon -i dist/bundle.js -i .browserify-cache -x npm run autostart",
     "prepublish": "npm run compile"
   },
   "repository": {
