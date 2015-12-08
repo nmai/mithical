@@ -1,9 +1,11 @@
-/* Intention is to interact with localStorage and display a list of items here.
+/*
+ * What is Love
  *
- * I will think of a buttiful quote and/or friendly face soon enough.
  */
 
 /* ~~ brainstorming shit here ~~
+ *
+ * Intention is to interact with localStorage and display a list of items here.
  *
  * The first step in this journey is to create a couple helper functions
  * to help interact with localStorage. It is a fairly simple API and I do not
@@ -18,5 +20,5 @@
  * The next step is to render the data. The list of lists should be show in
  * a sidebar on the left.
  *
- *
  */
+ 
