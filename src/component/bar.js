@@ -1,3 +1,9 @@
+/* ( $ _ $ )
+ *
+ * Holla holla holla
+ *
+ */
+
 'use strict'
 
 let m = require('../../lib/mithril')

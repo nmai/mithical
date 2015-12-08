@@ -1,3 +1,9 @@
+/* ( ☼ _ ☼ )
+ *
+ * Hello sunshine.
+ *
+ */
+
 'use strict'
 
 let m = require('../../lib/mithril')

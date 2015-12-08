@@ -1,3 +1,8 @@
+/* 
+ * The only thing that comes to a sleeping man is dreams.
+ *
+ */
+
 'use strict'
 
 /* SHELVED. Might need to fork progressbar.js for a clean solution.

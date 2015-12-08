@@ -1,3 +1,9 @@
+/* ( ⚆ _ ⚆ )
+ *
+ * Come early tomorrow, for we shall do beautiful things in the morning.
+ *
+ */
+
 'use strict'
 
 let m = require('../../lib/mithril')
@@ -41,10 +47,10 @@ List.vm = (function() {
         throw new Error('Cannot select undefined task')
       }
     }
-    vm.selectIndex = (i) => {
+    vm.selectIndex = (i, cursorPlacement) => {
       let t = vm.list[i]
       if (t) {
-        vm.selectTask(t)
+        vm.selectTask(t, cursorPlacement)
         return true
       } else {
         // If no such item exists, don't throw an error. This is by design.
@@ -53,10 +59,10 @@ List.vm = (function() {
       }
     }
     vm.shiftUp = (cursorPlacement) => {
-      vm.selectIndex(_selected - 1)
+      vm.selectIndex(_selected - 1, cursorPlacement)
     }
     vm.shiftDown = (cursorPlacement) => {
-      vm.selectIndex(_selected + 1)
+      vm.selectIndex(_selected + 1, cursorPlacement)
     }
 
     vm.recalculate = () => {
