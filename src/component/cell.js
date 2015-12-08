@@ -1,7 +1,6 @@
 'use strict'
 
 let m = require('../../lib/mithril')
-let List = require('./list')
 
 // Cell 2.0: serves strictly as a template to structure data stored elsewhere
 let Cell = {
