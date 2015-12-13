@@ -27,7 +27,6 @@ let Cell = {
               textDecoration: ctrl.task.done() ? 'line-through' : 'none',
               outline: 0,
               width: '100%',
-              fontFamily: 'Helvetica Neue',
               fontWeight: '300',
               fontSize: '20px',
               whiteSpace: 'pre'
