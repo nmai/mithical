@@ -42,7 +42,11 @@ let Cell = {
               }
             },
             onkeydown: (e) => {
-              if (e.keyCode == '40') {
+              if (e.keyCode == '8' && ctrl.task.description().length === 0) {
+                // BACKSPACE key pressed AND description is empty
+                e.preventDefault()
+                ctrl.task.vm.remove(ctrl.task)
+              } else if (e.keyCode == '40') {
                 // DOWN key pressed
                 e.preventDefault()
                 ctrl.task.vm.shiftDown()

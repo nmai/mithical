@@ -31,8 +31,12 @@ List.vm = (function() {
     localforage.getItem('document').then(function(value) {
       console.log(value)
       if (value) {
+        // @todo: change this to .add(), for autoselect support.
         vm.list = value.map((desc) => {
-          return new Task({description: desc})
+          return new Task({
+            description: desc,
+            vm: vm
+          })
         })
       } else {
         vm.list = []
@@ -117,16 +121,43 @@ List.vm = (function() {
 
       //adds a todo to the list, and clears the description field for user convenience
       vm.add = (autoselect) => {
-        //if (vm.description()) {
         let t = new Task({description: vm.description(), vm: List.vm})
         vm.list.push(t)
         vm.description('')
+
         if (autoselect) {
           vm.selectTask(t)
         }
+
         vm.save()
+
         return t
-        //}
+      }
+
+      // deletes a task from the list and selects the previous task
+      vm.remove = (task) => {
+        let i = vm.list.indexOf(task)
+
+        if (vm.list.length > 0) {
+          if (i > 0) {
+            vm.selectIndex(i - 1)
+          } else {
+            // @todo: perhaps find a cleaner solution
+            // Right now we rely on the fact that selectIndex will handle
+            // out of bound indices.
+            vm.selectIndex(i + 1)
+          }
+
+          // @todo: ensure that task is actually a member of the list
+          vm.list.pop(task)
+
+          vm.save()
+
+          return true
+        }
+
+        // we didn't actually remove anything, because there was only 1 item.
+        return false
       }
 
       //add a single item to get started. set as the currently selected element.

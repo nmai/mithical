@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/nick/Desktop/mithical/lib/mithril.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"C:\\Users\\nick\\Desktop\\mithical\\lib\\mithril.js":[function(require,module,exports){
 void (function (global, factory) { // eslint-disable-line
 	"use strict"
 	/* eslint-disable no-undef */
@@ -2146,11 +2146,11 @@ void (function (global, factory) { // eslint-disable-line
 	return m
 })
 
-},{}],"/Users/nick/Desktop/mithical/node_modules/localforage/dist/localforage.js":[function(require,module,exports){
+},{}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\localforage\\dist\\localforage.js":[function(require,module,exports){
 (function (process,global){
 /*!
     localForage -- Offline Storage, Improved
-    Version 1.3.0
+    Version 1.3.1
     https://mozilla.github.io/localForage
     (c) 2013-2015 Mozilla, Apache License 2.0
 */
@@ -3551,7 +3551,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            dbInfo.db = dbContext.db = db;
 	            self._dbInfo = dbInfo;
 	            // Share the final connection amongst related localForages.
-	            for (var k in forages) {
+	            for (var k = 0; k < forages.length; k++) {
 	                var forage = forages[k];
 	                if (forage !== self) {
 	                    // Self is already up-to-date.
@@ -3745,10 +3745,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var dbInfo;
 	            self.ready().then(function () {
 	                dbInfo = self._dbInfo;
-	                return _checkBlobSupport(dbInfo.db);
-	            }).then(function (blobSupport) {
-	                if (!blobSupport && value instanceof Blob) {
-	                    return _encodeBlob(value);
+	                if (value instanceof Blob) {
+	                    return _checkBlobSupport(dbInfo.db).then(function (blobSupport) {
+	                        if (blobSupport) {
+	                            return value;
+	                        }
+	                        return _encodeBlob(value);
+	                    });
 	                }
 	                return value;
 	            }).then(function (value) {
@@ -4930,7 +4933,7 @@ return /******/ (function(modules) { // webpackBootstrap
 });
 ;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":"/Users/nick/Desktop/mithical/node_modules/process/browser.js"}],"/Users/nick/Desktop/mithical/node_modules/process/browser.js":[function(require,module,exports){
+},{"_process":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\process\\browser.js"}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\process\\browser.js":[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -5023,7 +5026,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/circle.js":[function(require,module,exports){
+},{}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\circle.js":[function(require,module,exports){
 // Circle shaped progress bar
 
 var Shape = require('./shape');
@@ -5063,7 +5066,7 @@ Circle.prototype._trailString = function _trailString(opts) {
 
 module.exports = Circle;
 
-},{"./shape":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/shape.js","./utils":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/utils.js"}],"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/line.js":[function(require,module,exports){
+},{"./shape":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\shape.js","./utils":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\utils.js"}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\line.js":[function(require,module,exports){
 // Line shaped progress bar
 
 var Shape = require('./shape');
@@ -5094,7 +5097,7 @@ Line.prototype._trailString = function _trailString(opts) {
 
 module.exports = Line;
 
-},{"./shape":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/shape.js","./utils":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/utils.js"}],"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/main.js":[function(require,module,exports){
+},{"./shape":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\shape.js","./utils":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\utils.js"}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\main.js":[function(require,module,exports){
 module.exports = {
     // Higher level API, different shaped progress bars
     Line: require('./line'),
@@ -5113,7 +5116,7 @@ module.exports = {
     utils: require('./utils')
 };
 
-},{"./circle":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/circle.js","./line":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/line.js","./path":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/path.js","./semicircle":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/semicircle.js","./shape":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/shape.js","./utils":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/utils.js"}],"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/path.js":[function(require,module,exports){
+},{"./circle":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\circle.js","./line":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\line.js","./path":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\path.js","./semicircle":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\semicircle.js","./shape":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\shape.js","./utils":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\utils.js"}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\path.js":[function(require,module,exports){
 // Lower level API to animate any kind of svg path
 
 var Tweenable = require('shifty');
@@ -5283,7 +5286,7 @@ Path.prototype._easing = function _easing(easing) {
 
 module.exports = Path;
 
-},{"./utils":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/utils.js","shifty":"/Users/nick/Desktop/mithical/node_modules/shifty/dist/shifty.js"}],"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/semicircle.js":[function(require,module,exports){
+},{"./utils":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\utils.js","shifty":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\shifty\\dist\\shifty.js"}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\semicircle.js":[function(require,module,exports){
 // Semi-SemiCircle shaped progress bar
 
 var Shape = require('./shape');
@@ -5331,7 +5334,7 @@ SemiCircle.prototype._trailString = Circle.prototype._trailString;
 
 module.exports = SemiCircle;
 
-},{"./circle":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/circle.js","./shape":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/shape.js","./utils":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/utils.js"}],"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/shape.js":[function(require,module,exports){
+},{"./circle":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\circle.js","./shape":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\shape.js","./utils":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\utils.js"}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\shape.js":[function(require,module,exports){
 // Base object for different progress bar shapes
 
 var Path = require('./path');
@@ -5609,7 +5612,7 @@ Shape.prototype._trailString = function _trailString(opts) {
 
 module.exports = Shape;
 
-},{"./path":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/path.js","./utils":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/utils.js"}],"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/utils.js":[function(require,module,exports){
+},{"./path":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\path.js","./utils":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\utils.js"}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\utils.js":[function(require,module,exports){
 // Utility functions
 
 var PREFIXES = 'Webkit Moz O ms'.split(' ');
@@ -5732,7 +5735,7 @@ module.exports = {
     forEachObject: forEachObject
 };
 
-},{}],"/Users/nick/Desktop/mithical/node_modules/shifty/dist/shifty.js":[function(require,module,exports){
+},{}],"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\shifty\\dist\\shifty.js":[function(require,module,exports){
 /*! shifty - v1.5.0 - 2015-05-31 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
@@ -7352,7 +7355,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-},{}],"/Users/nick/Desktop/mithical/src/component/bar.js":[function(require,module,exports){
+},{}],"C:\\Users\\nick\\Desktop\\mithical\\src\\component\\bar.js":[function(require,module,exports){
 /* ( $ _ $ )
  *
  * Holla holla holla
@@ -7411,7 +7414,7 @@ let Bar = {
 
 module.exports = Bar
 
-},{"../../lib/mithril":"/Users/nick/Desktop/mithical/lib/mithril.js","progressbar.js":"/Users/nick/Desktop/mithical/node_modules/progressbar.js/src/main.js"}],"/Users/nick/Desktop/mithical/src/component/cell.js":[function(require,module,exports){
+},{"../../lib/mithril":"C:\\Users\\nick\\Desktop\\mithical\\lib\\mithril.js","progressbar.js":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\progressbar.js\\src\\main.js"}],"C:\\Users\\nick\\Desktop\\mithical\\src\\component\\cell.js":[function(require,module,exports){
 /* ( ☼ _ ☼ )
  *
  * Hello sunshine.
@@ -7456,7 +7459,11 @@ let Cell = {
               }
             },
             onkeydown: (e) => {
-              if (e.keyCode == '40') {
+              if (e.keyCode == '8' && ctrl.task.description().length === 0) {
+                // BACKSPACE key pressed AND description is empty
+                e.preventDefault()
+                ctrl.task.vm.remove(ctrl.task)
+              } else if (e.keyCode == '40') {
                 // DOWN key pressed
                 e.preventDefault()
                 ctrl.task.vm.shiftDown()
@@ -7505,7 +7512,7 @@ let Cell = {
 
 module.exports = Cell
 
-},{"../../lib/mithril":"/Users/nick/Desktop/mithical/lib/mithril.js"}],"/Users/nick/Desktop/mithical/src/component/list.js":[function(require,module,exports){
+},{"../../lib/mithril":"C:\\Users\\nick\\Desktop\\mithical\\lib\\mithril.js"}],"C:\\Users\\nick\\Desktop\\mithical\\src\\component\\list.js":[function(require,module,exports){
 (function (global){
 /* ( ⚆ _ ⚆ )
  *
@@ -7540,8 +7547,12 @@ List.vm = (function() {
     localforage.getItem('document').then(function(value) {
       console.log(value)
       if (value) {
+        // @todo: change this to .add(), for autoselect support.
         vm.list = value.map((desc) => {
-          return new Task({description: desc})
+          return new Task({
+            description: desc,
+            vm: vm
+          })
         })
       } else {
         vm.list = []
@@ -7626,16 +7637,43 @@ List.vm = (function() {
 
       //adds a todo to the list, and clears the description field for user convenience
       vm.add = (autoselect) => {
-        //if (vm.description()) {
         let t = new Task({description: vm.description(), vm: List.vm})
         vm.list.push(t)
         vm.description('')
+
         if (autoselect) {
           vm.selectTask(t)
         }
+
         vm.save()
+
         return t
-        //}
+      }
+
+      // deletes a task from the list and selects the previous task
+      vm.remove = (task) => {
+        let i = vm.list.indexOf(task)
+
+        if (vm.list.length > 0) {
+          if (i > 0) {
+            vm.selectIndex(i - 1)
+          } else {
+            // @todo: perhaps find a cleaner solution
+            // Right now we rely on the fact that selectIndex will handle
+            // out of bound indices.
+            vm.selectIndex(i + 1)
+          }
+
+          // @todo: ensure that task is actually a member of the list
+          vm.list.pop(task)
+
+          vm.save()
+
+          return true
+        }
+
+        // we didn't actually remove anything, because there was only 1 item.
+        return false
       }
 
       //add a single item to get started. set as the currently selected element.
@@ -7674,7 +7712,7 @@ List.view = function (){
 
 module.exports = List
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../lib/mithril":"/Users/nick/Desktop/mithical/lib/mithril.js","./bar.js":"/Users/nick/Desktop/mithical/src/component/bar.js","./cell.js":"/Users/nick/Desktop/mithical/src/component/cell.js","./task.js":"/Users/nick/Desktop/mithical/src/component/task.js","localforage":"/Users/nick/Desktop/mithical/node_modules/localforage/dist/localforage.js"}],"/Users/nick/Desktop/mithical/src/component/task.js":[function(require,module,exports){
+},{"../../lib/mithril":"C:\\Users\\nick\\Desktop\\mithical\\lib\\mithril.js","./bar.js":"C:\\Users\\nick\\Desktop\\mithical\\src\\component\\bar.js","./cell.js":"C:\\Users\\nick\\Desktop\\mithical\\src\\component\\cell.js","./task.js":"C:\\Users\\nick\\Desktop\\mithical\\src\\component\\task.js","localforage":"C:\\Users\\nick\\Desktop\\mithical\\node_modules\\localforage\\dist\\localforage.js"}],"C:\\Users\\nick\\Desktop\\mithical\\src\\component\\task.js":[function(require,module,exports){
 /* ( ◎ _ ◎ )
  *
  * Once more, it is I who will guide you.
@@ -7698,9 +7736,18 @@ let Task = function(data) {
 }
 
 module.exports = Task
-},{"../../lib/mithril":"/Users/nick/Desktop/mithical/lib/mithril.js"}],"/Users/nick/Desktop/mithical/src/mithical":[function(require,module,exports){
-/* 
- * The only thing that comes to a sleeping man is dreams.
+
+},{"../../lib/mithril":"C:\\Users\\nick\\Desktop\\mithical\\lib\\mithril.js"}],"C:\\Users\\nick\\Desktop\\mithical\\src\\mithical":[function(require,module,exports){
+/*                     _          
+ *                    (_)         
+ *    __ _   ___ _ __  _ _ __ ___ 
+ *   / _` | / __| '_ \| | '__/ _ \
+ *  | (_| |_\__ \ |_) | | | |  __/
+ *   \__,_(_)___/ .__/|_|_|  \___|
+ *              | |               
+ *              |_|               
+ *
+ * the only thing that comes to a sleeping man is dreams
  *
  */
 
@@ -7730,4 +7777,4 @@ m.mount(document.getElementById('container'), {controller: List.controller, view
 // thought: perhaps I really do need to switch to a hidden textarea.
 // I just realized selection and copy/paste is impossible with my current implementation.
 
-},{"../lib/mithril":"/Users/nick/Desktop/mithical/lib/mithril.js","./component/list":"/Users/nick/Desktop/mithical/src/component/list.js"}]},{},["/Users/nick/Desktop/mithical/src/mithical"]);
+},{"../lib/mithril":"C:\\Users\\nick\\Desktop\\mithical\\lib\\mithril.js","./component/list":"C:\\Users\\nick\\Desktop\\mithical\\src\\component\\list.js"}]},{},["C:\\Users\\nick\\Desktop\\mithical\\src\\mithical"]);
