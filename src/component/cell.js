@@ -70,7 +70,7 @@ let Cell = {
               ctrl.task.vm.save()
             },
             onclick: (e) => {
-              e.stopPropogation()
+              e.stopPropagation()
             },
             config: (el) => {
               // If a request was queued, grab the focus and reset.
@@ -89,7 +89,7 @@ let Cell = {
             },
             //Here we need to add onclick listener to toggle states
             onclick: (e) => {
-              e.stopPropogation()
+              e.stopPropagation()
               ctrl.task.vm.checkOff(ctrl.task)
             },
             checked: ctrl.task.done()
