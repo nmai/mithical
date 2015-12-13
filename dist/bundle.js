@@ -7481,6 +7481,10 @@ let Cell = {
                 ctrl.task.done(false)
                 ctrl.task.vm.recalculate()
               }
+              ctrl.task.vm.save()
+            },
+            onclick: (e) => {
+              e.stopPropogation()
             },
             config: (el) => {
               // If a request was queued, grab the focus and reset.
@@ -7494,10 +7498,14 @@ let Cell = {
         m('td', [
           m('input[type=checkbox]', {
             style: {
-              visibility: ctrl.task.valid() ? 'visible' : 'hidden'
+              visibility: ctrl.task.valid() ? 'visible' : 'hidden',
+              fontSize: '100%'
             },
             //Here we need to add onclick listener to toggle states
-            onclick: () => {ctrl.task.vm.checkOff(ctrl.task)},
+            onclick: (e) => {
+              e.stopPropogation()
+              ctrl.task.vm.checkOff(ctrl.task)
+            },
             checked: ctrl.task.done()
           })
         ])
@@ -7537,6 +7545,37 @@ List.vm = (function() {
   var vm = {}
   vm.init = function() {
 
+    // gah disgusting please get rid of this asap
+    document.body.addEventListener('click', () => {
+      vm.selectIndex(vm.list.length - 1)
+      m.redraw()
+    })
+
+    vm.recalculate = () => {
+      // @TODO: optimize further and (maybe) break this out to a separate helper function
+      //        Or perhaps dispatch a custom event.
+      // Update the progress bar.
+      console.log('Recalculating progress...')
+      let complete = 0
+      let total = 0
+      vm.list.map( (t) => {
+        if (t.done()) {
+          ++complete
+        }
+        if (t.valid()) {
+          ++total
+        }
+      })
+      console.log(Bar)
+      if (total > 0) {
+        Bar.update(complete / total)
+      } else if (complete === total) {
+        Bar.update(0)
+      } else {
+        throw new Error()
+      }
+    }
+
     //a running list of todos
     vm.list = new Array()
 
@@ -7552,6 +7591,7 @@ List.vm = (function() {
             vm: vm
           })
         })
+        vm.recalculate()
       } else {
         vm.list = []
         // localforage.setItem('document', vm.list)
@@ -7608,31 +7648,6 @@ List.vm = (function() {
         vm.selectIndex(_selected + 1, cursorPlacement)
       }
 
-      vm.recalculate = () => {
-        // @TODO: optimize further and (maybe) break this out to a separate helper function
-        //        Or perhaps dispatch a custom event.
-        // Update the progress bar.
-        console.log('Recalculating progress...')
-        let complete = 0
-        let total = 0
-        vm.list.map( (t) => {
-          if (t.done()) {
-            ++complete
-          }
-          if (t.valid()) {
-            ++total
-          }
-        })
-        console.log(Bar)
-        if (total > 0) {
-          Bar.update(complete / total)
-        } else if (complete === total) {
-          Bar.update(0)
-        } else {
-          throw new Error()
-        }
-      }
-
       //adds a todo to the list, and clears the description field for user convenience
       vm.add = (autoselect) => {
         let t = new Task({description: vm.description(), vm: List.vm})
@@ -7680,8 +7695,10 @@ List.vm = (function() {
       }
 
       vm.checkOff = function(task) {
+        console.log('CHECKING OFF')
         task.done(!task.done())
         vm.recalculate()
+        vm.save()
       }
 
       // everything above was async so we need to refresh
@@ -7697,7 +7714,7 @@ List.controller = function (){
 
 List.view = function (){
   return [
-    m('button', { onclick: List.vm.save, style: {marginBottom: '10px'}}),
+    //m('button', { onclick: List.vm.save, style: {marginBottom: '10px'}}),
     m('br'),
     m.component(Bar),
     m('table',
@@ -7726,13 +7743,12 @@ let m = require('../../lib/mithril')
 // I see no reason to keep them apart, especially given how much
 // they depend on each other.
 let Task = function(data) {
-  this.description = m.prop(data.description)
-  this.done = m.prop(false)
-  this.valid = m.prop(false)
+  this.description = m.prop(data.description ? data.description : '')
+  this.done = m.prop(data.done ? data.done : false)
+  this.valid = m.prop(this.description().length > 0 ? true : false)
   this.needFocus = m.prop(false)
   this.vm = data.vm ? data.vm : null
   this.toJSON = function () {
-    console.log('wascalled')
     return {
       done: this.done,
       description: this.description

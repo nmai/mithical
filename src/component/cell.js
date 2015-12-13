@@ -67,6 +67,10 @@ let Cell = {
                 ctrl.task.done(false)
                 ctrl.task.vm.recalculate()
               }
+              ctrl.task.vm.save()
+            },
+            onclick: (e) => {
+              e.stopPropogation()
             },
             config: (el) => {
               // If a request was queued, grab the focus and reset.
@@ -80,10 +84,14 @@ let Cell = {
         m('td', [
           m('input[type=checkbox]', {
             style: {
-              visibility: ctrl.task.valid() ? 'visible' : 'hidden'
+              visibility: ctrl.task.valid() ? 'visible' : 'hidden',
+              fontSize: '100%'
             },
             //Here we need to add onclick listener to toggle states
-            onclick: () => {ctrl.task.vm.checkOff(ctrl.task)},
+            onclick: (e) => {
+              e.stopPropogation()
+              ctrl.task.vm.checkOff(ctrl.task)
+            },
             checked: ctrl.task.done()
           })
         ])
