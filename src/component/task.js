@@ -18,6 +18,13 @@ let Task = function(data) {
   this.valid = m.prop(false)
   this.needFocus = m.prop(false)
   this.vm = data.vm ? data.vm : null
+  this.toJSON = function () {
+    console.log('wascalled')
+    return {
+      done: this.done,
+      description: this.description
+    }
+  }
 }
 
 module.exports = Task

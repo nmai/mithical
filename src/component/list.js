@@ -33,8 +33,10 @@ List.vm = (function() {
       if (value) {
         // @todo: change this to .add(), for autoselect support.
         vm.list = value.map((desc) => {
+          let data = JSON.parse(desc)
           return new Task({
-            description: desc,
+            description: data.description,
+            done: data.done,
             vm: vm
           })
         })
@@ -49,7 +51,7 @@ List.vm = (function() {
 
       vm.save = function() {
         let flat = vm.list.map((task) => {
-          return task.description()
+          return JSON.stringify(task)
         })
         localforage.setItem('document', flat)
       }
